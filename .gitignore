@@ -1,0 +1,7 @@
+*.egg-info
+.venv
+.vscode
+__pycache__
+*.mp3
+tts_ws_python3_demo.py
+test.py
