@@ -158,11 +158,16 @@ def _main():
         for data in tts.get_stream(text, busopt):
             sys.stdout.buffer.write(data)
     else:
+        if not os.path.isfile(args.file):
+            logger.warning(args.file + ' is not file')
+            return
+
         with open(args.file, encoding='utf8') as f:
             text = f.read()
         if not text.strip():
             logger.warning('no data from file')
             return
+
         with open(Path(args.file).with_suffix('.mp3'), 'wb') as f:
             for data in tts.get_stream(text, busopt):
                 f.write(data)
