@@ -71,7 +71,7 @@ class TTS:
         logger.debug('auth:', v)
 
         # 拼接鉴权参数
-        return 'wss://tts-api.xfyun.cn/v2/tts?' + urlencode(v)
+        return f'wss://tts-api.xfyun.cn/v2/tts?{urlencode(v)}'
 
     def receive(self, ws: websocket.WebSocket):
         '''内容分多次返回，服务端保证每次都是完整的json'''
@@ -83,8 +83,10 @@ class TTS:
             logger.debug('message:', message)
 
             if message['code']:  # !=0
-                logger.error('sid %s call error %s code is %s' %
-                             (message['sid'], message['message'], message['code']))
+                logger.error(
+                    f"sid {message['sid']} call error {message['message']} code is {message['code']}"
+                )
+
                 return
 
             yield base64.b64decode(message['data']['audio'])
@@ -141,10 +143,7 @@ def _main():
     (appid, apisecret, apikey, busopt) = (os.getenv('XFYUN_APPID'), os.getenv('XFYUN_APISECRET'), os.getenv('XFYUN_APIKEY'), os.getenv('XFYUN_BUSOPT'))
     assert appid and apisecret and apikey, 'missing XFYUN_XXX environment variables'
     if busopt:
-        if busopt == 'MAN':
-            busopt = TTS.busopt_man()
-        else:
-            busopt = json.loads(busopt)
+        busopt = TTS.busopt_man() if busopt == 'MAN' else json.loads(busopt)
     assert busopt is None or isinstance(busopt, dict)
 
     tts = TTS(appid, apisecret, apikey)
@@ -159,7 +158,7 @@ def _main():
             sys.stdout.buffer.write(data)
     else:
         if not os.path.isfile(args.file):
-            logger.warning(args.file + ' is not file')
+            logger.warning(f'{args.file} is not file')
             return
 
         with open(args.file, encoding='utf8') as f:
