@@ -141,10 +141,7 @@ def _main():
     (appid, apisecret, apikey, busopt) = (os.getenv('XFYUN_APPID'), os.getenv('XFYUN_APISECRET'), os.getenv('XFYUN_APIKEY'), os.getenv('XFYUN_BUSOPT'))
     assert appid and apisecret and apikey, 'missing XFYUN_XXX environment variables'
     if busopt:
-        if busopt == 'MAN':
-            busopt = TTS.busopt_man()
-        else:
-            busopt = json.loads(busopt)
+        busopt = TTS.busopt_man() if busopt == 'MAN' else json.loads(busopt)
     assert busopt is None or isinstance(busopt, dict)
 
     tts = TTS(appid, apisecret, apikey)
