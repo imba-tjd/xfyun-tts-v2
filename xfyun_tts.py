@@ -42,7 +42,7 @@ class TTS:
             'business':  business_options or self.default_business_options,
             'data': {'status': 2, 'text': base64.b64encode(text).decode()},
         }
-        logger.debug('body:', body)
+        logger.debug('body: %s', body)
 
         return json.dumps(body)
 
@@ -68,7 +68,7 @@ class TTS:
             'date': date,
             'authorization': auth,
         }
-        logger.debug('auth:', v)
+        logger.debug('auth: %s', v)
 
         # 拼接鉴权参数
         return 'wss://tts-api.xfyun.cn/v2/tts?' + urlencode(v)
@@ -80,7 +80,7 @@ class TTS:
             logger.info('received.')
 
             message = json.loads(message)
-            logger.debug('message:', message)
+            logger.debug('message: %s', message)
 
             if message['code']:  # !=0
                 logger.error('sid %s call error %s code is %s' %
